@@ -2,6 +2,7 @@ const fs = require("fs");
 const readline = require("readline");
 
 const solve = (data) => {
+  console.log(data);
   let a = data[0],
     b = data[1],
     c = data[2];
@@ -9,6 +10,12 @@ const solve = (data) => {
   let x1 = (-1 * b + Math.sqrt(d)) / (2 * a);
   let x2 = (-1 * b - Math.sqrt(d)) / (2 * a);
   console.log(x1, x2);
+};
+
+const checkData = (data) => {
+  let reg = new RegExp(/\d\s\d\s\d\r\n/);
+  let res = reg.exec(data);
+  if (res) return true;
 };
 
 const rl = readline.createInterface({
@@ -40,7 +47,9 @@ const interactiveMode = (number, data) => {
 const noninteractiveMode = (filename) => {
   fs.readFile(filename, "utf8", function (err, data) {
     if (err) throw err;
-    solve(a, b, c);
+    if (checkData(data)) solve(data);
+    else console.log("invalid data");
+    process.exit(0);
   });
 };
 
