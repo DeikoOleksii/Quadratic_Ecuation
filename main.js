@@ -2,18 +2,29 @@ const fs = require("fs");
 const readline = require("readline");
 
 const solve = (data) => {
-  console.log(data);
   let a = data[0],
     b = data[1],
-    c = data[2];
+    c = parseFloat(data[2]);
+  console.log(`Equation is (${a})x^2 + (${b})x + (${c}) = 0`);
   let d = Math.pow(b, 2) - 4 * a * c;
-  let x1 = (-1 * b + Math.sqrt(d)) / (2 * a);
-  let x2 = (-1 * b - Math.sqrt(d)) / (2 * a);
-  console.log(x1, x2);
+  let roots = [];
+  if (d > 0) {
+    let x1 = (-1 * b + Math.sqrt(d)) / (2 * a);
+    let x2 = (-1 * b - Math.sqrt(d)) / (2 * a);
+    roots.push(x1);
+    roots.push(x2);
+  } else if (d == 0) {
+    let x = (-1 * b) / (2 * a);
+    roots.push(x);
+  }
+  console.log(`There are ${roots.length} roots`);
+  for(let root of roots){
+    console.log(root);
+  }
 };
 
 const checkData = (data) => {
-  let reg = new RegExp(/\d\s\d\s\d\r\n/);
+  let reg = new RegExp(/-?\d\s-?\d\s-?\d\r\n/);
   let res = reg.exec(data);
   if (res) return true;
 };
@@ -31,9 +42,6 @@ const interactiveMode = (number, data) => {
       else if (data.length == 2) interactiveMode("c", data);
       else {
         rl.close();
-        console.log(
-          `Equation is ${numbers[0]}x^2 + ${numbers[1]}x + ${numbers[2]} = 0`
-        );
         solve(data);
       }
     } else {
@@ -47,7 +55,7 @@ const interactiveMode = (number, data) => {
 const noninteractiveMode = (filename) => {
   fs.readFile(filename, "utf8", function (err, data) {
     if (err) throw err;
-    if (checkData(data)) solve(data);
+    if (checkData(data)) solve(data.split(' '));
     else console.log("invalid data");
     process.exit(0);
   });
